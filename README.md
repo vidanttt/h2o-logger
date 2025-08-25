@@ -50,9 +50,30 @@ node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"
 3. Deploy automatically!
 
 ### Step 4: Initialize Database
-After deployment, run in Vercel's terminal or locally:
+After deployment, initialize your production database:
+
+**Option A: Using Vercel Dashboard**
+1. Go to your project in Vercel Dashboard
+2. Click on "Functions" tab
+3. Find any API function and click "View Function Logs"  
+4. In the terminal/console, run:
 ```bash
 npx prisma migrate deploy
+```
+
+**Option B: Manual SQL Execution**
+1. Connect to your PostgreSQL database
+2. Copy the SQL from `prisma/migrations/20250825000000_initial/migration.sql`
+3. Execute it in your database console
+
+**Option C: Using Health Check**
+1. Visit `https://your-app.vercel.app/api/health`
+2. If it shows "database disconnected", follow Option A or B
+
+### Step 5: Test Deployment
+Visit `https://your-app.vercel.app/api/health` - should show:
+```json
+{"status": "healthy", "database": "connected", "userCount": 0}
 ```
 
 ## Local Development

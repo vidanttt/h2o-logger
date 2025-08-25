@@ -57,6 +57,28 @@ export async function POST(request: NextRequest) {
     })
   } catch (error) {
     console.error('Registration error:', error)
+    
+    // Provide more specific error messages
+    if (error instanceof Error) {
+      // Database connection issues
+      if (error.message.includes('Can\'t reach database server') || 
+          error.message.includes('connect ECONNREFUSED') ||
+          error.message.includes('database')) {
+        return NextResponse.json(
+          { error: 'Database connection error. Please try again later.' },
+          { status: 503 }
+        )
+      }
+      
+      // Prisma specific errors
+      if (error.message.includes('Prisma')) {
+        return NextResponse.json(
+          { error: 'Database operation failed. Please try again.' },
+          { status: 500 }
+        )
+      }
+    }
+    
     return NextResponse.json(
       { error: 'Internal server error' },
       { status: 500 }
